@@ -286,6 +286,8 @@ void nfct_bitmask_set_bit(struct nfct_bitmask *, unsigned int bit);
 int nfct_bitmask_test_bit(const struct nfct_bitmask *, unsigned int bit);
 void nfct_bitmask_unset_bit(struct nfct_bitmask *, unsigned int bit);
 void nfct_bitmask_destroy(struct nfct_bitmask *);
+void nfct_bitmask_clear(struct nfct_bitmask *);
+int nfct_bitmask_equal(const struct nfct_bitmask *, const struct nfct_bitmask *);
 
 /* connlabel name <-> bit translation mapping */
 struct nfct_labelmap;
