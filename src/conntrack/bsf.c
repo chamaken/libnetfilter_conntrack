@@ -316,6 +316,20 @@ bsf_cmp_subsys(struct sock_filter *this, int pos, u_int8_t subsys)
 }
 
 static int
+nfct_bsf_skip_if_a(struct sock_filter *this, int pos,
+		   u_int32_t aval, u_int8_t nskip)
+{
+	struct sock_filter __code = {
+		.code = BPF_JMP|BPF_JEQ|BPF_K,
+		.k = aval,
+		.jt = nskip,
+		.jf = 0,
+	};
+	memcpy(&this[pos], &__code, sizeof(__code));
+	return NEW_POS(__code);
+}
+
+static int
 add_state_filter_cta(struct sock_filter *this,
 		     unsigned int cta_protoinfo_proto,
 		     unsigned int cta_protoinfo_state,
@@ -683,13 +697,6 @@ bsf_add_mark_filter(const struct nfct_filter *f, struct sock_filter *this)
 	unsigned int jt;
 	struct stack *s;
 	struct jump jmp;
-	struct sock_filter __code = {
-		/* if (A == 0) skip next two */
-		.code = BPF_JMP|BPF_JEQ|BPF_K,
-		.k = 0,
-		.jt = 2,
-		.jf = 0,
-	};
 
 	/* nothing to filter, skip */
 	if (f->mark_elems == 0)
@@ -706,8 +713,7 @@ bsf_add_mark_filter(const struct nfct_filter *f, struct sock_filter *this)
 	j = 0;
 	j += nfct_bsf_load_payload_offset(this, j);	/* A = nla header offset 		*/
 	j += nfct_bsf_find_attr(this, CTA_MARK, j);	/* A = CTA_MARK offset, started from A	*/
-	memcpy(&this[j], &__code, sizeof(__code));	/* if A == 0 skip next two op		*/
-	j += NEW_POS(__code);
+	j += nfct_bsf_skip_if_a(this, j, 0, 2);		/* if A == 0 skip next two op		*/
 	j += nfct_bsf_x_equal_a(this, j);		/* X = A <CTA_MARK offset>		*/
 	j += nfct_bsf_load_attr(this, BPF_W, j);	/* A = skb->data[X:X + BPF_W]		*/
 	j += nfct_bsf_x_equal_a(this, j);		/* X = A <CTA_MARK value>		*/
@@ -724,6 +730,49 @@ bsf_add_mark_filter(const struct nfct_filter *f, struct sock_filter *this)
 		this[jmp.line].jt += jmp.jt + j;
 
 	if (f->logic[NFCT_FILTER_MARK] == NFCT_FILTER_LOGIC_NEGATIVE)
+		j += nfct_bsf_jump_to(this, 1, j);
+
+	j += nfct_bsf_ret_verdict(this, NFCT_FILTER_REJECT, j);
+
+	stack_destroy(s);
+
+	return j;
+}
+
+static int
+bsf_add_zone_filter(const struct nfct_filter *f, struct sock_filter *this)
+{
+	unsigned int i, j;
+	unsigned int jt;
+	struct stack *s;
+	struct jump jmp;
+
+	/* nothing to filter, skip */
+	if (f->zone_elems == 0)
+		return 0;
+
+	s = stack_create(sizeof(struct jump), 3 + 511);
+	if (s == NULL) {
+		errno = ENOMEM;
+		return -1;
+	}
+
+	jt = 1;
+	j = 0;
+	j += nfct_bsf_load_payload_offset(this, j);	/* A = nla header offset 		*/
+	j += nfct_bsf_find_attr(this, CTA_ZONE, j);	/* A = CTA_ZONE offset, started from A	*/
+	/* A message which does not contain CTA_ZONE is regarded as its value is 0. */
+	j += nfct_bsf_skip_if_a(this, j, 0, 2);		/* if A == 0 skip next two op		*/
+	j += nfct_bsf_x_equal_a(this, j);		/* X = A <CTA_MARK offset>		*/
+	j += nfct_bsf_load_attr(this, BPF_H, j);	/* A = skb->data[X:X + BPF_H]		*/
+
+	for (i = 0; i < f->zone_elems; i++)
+		j += nfct_bsf_cmp_k_stack(this, f->zone[i], jt - j, j, s);
+
+	while (stack_pop(s, &jmp) != -1)
+		this[jmp.line].jt += jmp.jt + j;
+
+	if (f->logic[NFCT_FILTER_ZONE] == NFCT_FILTER_LOGIC_NEGATIVE)
 		j += nfct_bsf_jump_to(this, 1, j);
 
 	j += nfct_bsf_ret_verdict(this, NFCT_FILTER_REJECT, j);
@@ -768,6 +817,9 @@ int __setup_netlink_socket_filter(int fd, struct nfct_filter *f)
 	from = j;
 	j += bsf_add_mark_filter(f, &bsf[j]);
 	show_filter(bsf, from, j, "---- check mark ----");
+	from = j;
+	j += bsf_add_zone_filter(f, &bsf[j]);
+	show_filter(bsf, from, j, "---- check zone ----");
 	from = j;
 
 	/* nothing to filter, skip */
