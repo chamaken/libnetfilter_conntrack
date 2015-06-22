@@ -1,0 +1,35 @@
+いくつか ulogd の拡張を試しています。一つは python scripting、もう一
+つはマルチスレッド化です。python scripting については複数の ulogd
+python モジュールを稼動させるにあたって、python 実行プロセスを fork
+させています。この際、親 ulogd プロセスと 子 python プロセス間では
+mmap したエリアを共有しようと考えています。マルチスレッドについては
+既存の構造体 (struct ulogd_keyset) を ulogd モジュールと少し離して
+メッセージのように扱おうと考えています。
+
+いずれの場合も pre-allocation エリアが必要になるのですが、既存の
+struct nf_conntrack では事前のサイズを知ることができないようです。
+これを解決するために新しい構造体 struct nfct_attrs を導入してみまし
+た。
+
+更にまだ全く実装していませんが mmap された socket から netlink の情
+報を取得するにあたっても、パースだけすることに意味があると考えていま
+す。
+
+ご意見いただければ幸いです。
+
+I am trying to extend a few about ulogd. One of these is creating
+python scripting module and another one is multi-threading. Talking
+about python scripting, I use fork() to run multiple python ulogd
+module and try to communicate between parent and child by using
+mmaped area. Multi-threading, I think I need to isolate already
+existing structure (struct ulogd_keyset) from module and handle it
+as a message.
+
+In both cases, it seems that nfct object should be embedded in
+pre-allocation area, but it seems difficult to embed current struct
+nf_conntrack because its size can not be caliculated previously. To
+solve this I tried to introduce new function which is similar to
+nfq_nlmsg_parse() in lnf-queue.
+
+I am glad if you give me advice on the patch.
+Thansk,
