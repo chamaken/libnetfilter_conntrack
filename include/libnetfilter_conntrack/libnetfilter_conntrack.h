@@ -579,20 +579,8 @@ extern int nfct_nlmsg_build(struct nlmsghdr *nlh, const struct nf_conntrack *ct)
 extern int nfct_nlmsg_parse(const struct nlmsghdr *nlh, struct nf_conntrack *ct);
 extern int nfct_payload_parse(const void *payload, size_t payload_len, uint16_t l3num, struct nf_conntrack *ct);
 
-
-struct nfct_attrs {
-	uint8_t l3proto;
-	struct nfct_bitmask *set;
-	struct nlattr	*attrs[ATTR_MAX];
-};
-#define NFCT_ATTRS_SIZE (sizeof(uint8_t)				\
-			 + sizeof(struct nfct_bitmask *)		\
-			 + ATTR_MAX * sizeof(struct nlattr *)		\
-			 + DIV_ROUND_UP(ATTR_MAX+1, 32) * sizeof(uint32_t))
-
-extern int nfcta_nlmsg_parse(const struct nlmsghdr *nlh, struct nfct_attrs *ctattrs);
-extern int nfcta_payload_parse(const void *payload, size_t payload_len, uint16_t l3num, struct nfct_attrs *ctattrs);
-extern void nfcta_init(struct nfct_attrs *ctattrs);
+extern int nfcta_nlmsg_parse(const struct nlmsghdr *nlh, struct nlattr **attrs);
+extern int nfcta_payload_parse(const void *payload, size_t payload_len, uint16_t l3num, struct nlattr **attrs);
 
 /*
  * NEW expectation API

@@ -973,7 +973,7 @@ int nfct_nlmsg_parse(const struct nlmsghdr *nlh, struct nf_conntrack *ct)
 }
 
 static int
-nfcta_parse_ip(const struct nlattr *attr, struct nfct_attrs *ctattrs,
+nfcta_parse_ip(const struct nlattr *attr, struct nlattr **attrs,
 	       const int dir)
 {
 	struct nlattr *tb[CTA_IP_MAX+1] = {};
@@ -984,16 +984,13 @@ nfcta_parse_ip(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_IP_V4_SRC]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_IPV4_SRC] = tb[CTA_IP_V4_SRC];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_IPV4_SRC);
+			attrs[ATTR_ORIG_IPV4_SRC] = tb[CTA_IP_V4_SRC];
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_IPV4_SRC] = tb[CTA_IP_V4_SRC];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_IPV4_SRC);
+			attrs[ATTR_REPL_IPV4_SRC] = tb[CTA_IP_V4_SRC];
 			break;
 		case __DIR_MASTER:
-			ctattrs->attrs[ATTR_MASTER_IPV4_SRC] = tb[CTA_IP_V4_SRC];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_IPV4_SRC);
+			attrs[ATTR_MASTER_IPV4_SRC] = tb[CTA_IP_V4_SRC];
 			break;
 		}
 	}
@@ -1001,16 +998,13 @@ nfcta_parse_ip(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_IP_V4_DST]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_IPV4_DST] = tb[CTA_IP_V4_DST];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_IPV4_DST);
+			attrs[ATTR_ORIG_IPV4_DST] = tb[CTA_IP_V4_DST];
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_IPV4_DST] = tb[CTA_IP_V4_DST];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_IPV4_DST);
+			attrs[ATTR_REPL_IPV4_DST] = tb[CTA_IP_V4_DST];
 			break;
 		case __DIR_MASTER:
-			ctattrs->attrs[ATTR_MASTER_IPV4_DST] = tb[CTA_IP_V4_DST];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_IPV4_DST);
+			attrs[ATTR_MASTER_IPV4_DST] = tb[CTA_IP_V4_DST];
 			break;
 		}
 	}
@@ -1018,16 +1012,13 @@ nfcta_parse_ip(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_IP_V6_SRC]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_IPV6_SRC] = tb[CTA_IP_V6_SRC];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_IPV6_SRC);
+			attrs[ATTR_ORIG_IPV6_SRC] = tb[CTA_IP_V6_SRC];
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_IPV6_SRC] = tb[CTA_IP_V6_SRC];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_IPV6_SRC);
+			attrs[ATTR_REPL_IPV6_SRC] = tb[CTA_IP_V6_SRC];
 			break;
 		case __DIR_MASTER:
-			ctattrs->attrs[ATTR_MASTER_IPV6_SRC] = tb[CTA_IP_V6_SRC];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_IPV6_SRC);
+			attrs[ATTR_MASTER_IPV6_SRC] = tb[CTA_IP_V6_SRC];
 			break;
 		}
 	}
@@ -1035,16 +1026,13 @@ nfcta_parse_ip(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_IP_V6_DST]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_IPV6_DST] = tb[CTA_IP_V6_DST];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_IPV6_DST);
+			attrs[ATTR_ORIG_IPV6_DST] = tb[CTA_IP_V6_DST];
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_IPV6_DST] = tb[CTA_IP_V6_DST];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_IPV6_DST);
+			attrs[ATTR_REPL_IPV6_DST] = tb[CTA_IP_V6_DST];
 			break;
 		case __DIR_MASTER:
-			ctattrs->attrs[ATTR_MASTER_IPV6_DST] = tb[CTA_IP_V6_DST];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_IPV6_DST);
+			attrs[ATTR_MASTER_IPV6_DST] = tb[CTA_IP_V6_DST];
 			break;
 		}
 	}
@@ -1052,7 +1040,7 @@ nfcta_parse_ip(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 }
 
 static int
-nfcta_parse_proto(const struct nlattr *attr, struct nfct_attrs *ctattrs,
+nfcta_parse_proto(const struct nlattr *attr, struct nlattr **attrs,
 		  const int dir)
 {
 	struct nlattr *tb[CTA_PROTO_MAX+1] = {};
@@ -1063,16 +1051,13 @@ nfcta_parse_proto(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_PROTO_NUM]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_L4PROTO] = tb[CTA_PROTO_NUM];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_L4PROTO);
+			attrs[ATTR_ORIG_L4PROTO] = tb[CTA_PROTO_NUM];
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_L4PROTO] = tb[CTA_PROTO_NUM];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_L4PROTO);
+			attrs[ATTR_REPL_L4PROTO] = tb[CTA_PROTO_NUM];
 			break;
 		case __DIR_MASTER:
-			ctattrs->attrs[ATTR_MASTER_L4PROTO] = tb[CTA_PROTO_NUM];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_L4PROTO);
+			attrs[ATTR_MASTER_L4PROTO] = tb[CTA_PROTO_NUM];
 			break;
 		}
 	}
@@ -1080,19 +1065,13 @@ nfcta_parse_proto(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_PROTO_SRC_PORT]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_PORT_SRC]
-				= tb[CTA_PROTO_SRC_PORT];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_PORT_SRC);
+			attrs[ATTR_ORIG_PORT_SRC] = tb[CTA_PROTO_SRC_PORT];
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_PORT_SRC]
-				= tb[CTA_PROTO_SRC_PORT];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_PORT_SRC);
+			attrs[ATTR_REPL_PORT_SRC] = tb[CTA_PROTO_SRC_PORT];
 			break;
 		case __DIR_MASTER:
-			ctattrs->attrs[ATTR_MASTER_PORT_SRC]
-				= tb[CTA_PROTO_SRC_PORT];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_PORT_SRC);
+			attrs[ATTR_MASTER_PORT_SRC] = tb[CTA_PROTO_SRC_PORT];
 			break;
 		}
 	}
@@ -1100,53 +1079,41 @@ nfcta_parse_proto(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_PROTO_DST_PORT]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_PORT_DST]
-				= tb[CTA_PROTO_DST_PORT];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_PORT_DST);
+			attrs[ATTR_ORIG_PORT_DST] = tb[CTA_PROTO_DST_PORT];
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_PORT_DST]
-				= tb[CTA_PROTO_DST_PORT];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_PORT_DST);
+			attrs[ATTR_REPL_PORT_DST] = tb[CTA_PROTO_DST_PORT];
 			break;
 		case __DIR_MASTER:
-			ctattrs->attrs[ATTR_MASTER_PORT_DST]
-				= tb[CTA_PROTO_DST_PORT];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_PORT_DST);
+			attrs[ATTR_MASTER_PORT_DST] = tb[CTA_PROTO_DST_PORT];
 			break;
 		}
 	}
 
 	if (tb[CTA_PROTO_ICMP_TYPE]) {
-		ctattrs->attrs[ATTR_ICMP_TYPE] = tb[CTA_PROTO_ICMP_TYPE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ICMP_TYPE);
+		attrs[ATTR_ICMP_TYPE] = tb[CTA_PROTO_ICMP_TYPE];
 	}
 	if (tb[CTA_PROTO_ICMP_CODE]) {
-		ctattrs->attrs[ATTR_ICMP_CODE] = tb[CTA_PROTO_ICMP_CODE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ICMP_CODE);
+		attrs[ATTR_ICMP_CODE] = tb[CTA_PROTO_ICMP_CODE];
 	}
 	if (tb[CTA_PROTO_ICMP_ID]) {
-		ctattrs->attrs[ATTR_ICMP_ID] = tb[CTA_PROTO_ICMP_ID];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ICMP_ID);
+		attrs[ATTR_ICMP_ID] = tb[CTA_PROTO_ICMP_ID];
 	}
 	if (tb[CTA_PROTO_ICMPV6_TYPE]) {
-		ctattrs->attrs[ATTR_ICMP_TYPE] = tb[CTA_PROTO_ICMPV6_TYPE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ICMP_TYPE);
+		attrs[ATTR_ICMP_TYPE] = tb[CTA_PROTO_ICMPV6_TYPE];
 	}
 	if (tb[CTA_PROTO_ICMPV6_CODE]) {
-		ctattrs->attrs[ATTR_ICMP_CODE] = tb[CTA_PROTO_ICMPV6_CODE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ICMP_CODE);
+		attrs[ATTR_ICMP_CODE] = tb[CTA_PROTO_ICMPV6_CODE];
 	}
 	if (tb[CTA_PROTO_ICMPV6_ID]) {
-		ctattrs->attrs[ATTR_ICMP_ID] = tb[CTA_PROTO_ICMPV6_ID];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ICMP_ID);
+		attrs[ATTR_ICMP_ID] = tb[CTA_PROTO_ICMPV6_ID];
 	}
 
 	return 0;
 }
 
 int
-nfcta_parse_tuple(const struct nlattr *attr, struct nfct_attrs *ctattrs,
+nfcta_parse_tuple(const struct nlattr *attr, struct nlattr **attrs,
 		  int dir)
 {
 	struct nlattr *tb[CTA_TUPLE_MAX+1] = {};
@@ -1155,12 +1122,12 @@ nfcta_parse_tuple(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 		return -1;
 
 	if (tb[CTA_TUPLE_IP]) {
-		if (nfcta_parse_ip(tb[CTA_TUPLE_IP], ctattrs, dir) < 0)
+		if (nfcta_parse_ip(tb[CTA_TUPLE_IP], attrs, dir) < 0)
 			return -1;
 	}
 
 	if (tb[CTA_TUPLE_PROTO]) {
-		if (nfcta_parse_proto(tb[CTA_TUPLE_PROTO], ctattrs, dir) < 0)
+		if (nfcta_parse_proto(tb[CTA_TUPLE_PROTO], attrs, dir) < 0)
 			return -1;
 	}
 
@@ -1168,7 +1135,7 @@ nfcta_parse_tuple(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 }
 
 static int
-nfcta_parse_protoinfo_tcp(const struct nlattr *attr, struct nfct_attrs *ctattrs)
+nfcta_parse_protoinfo_tcp(const struct nlattr *attr, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_PROTOINFO_TCP_MAX+1] = {};
 
@@ -1176,39 +1143,32 @@ nfcta_parse_protoinfo_tcp(const struct nlattr *attr, struct nfct_attrs *ctattrs)
 		return -1;
 
 	if (tb[CTA_PROTOINFO_TCP_STATE]) {
-		ctattrs->attrs[ATTR_TCP_STATE] = tb[CTA_PROTOINFO_TCP_STATE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TCP_STATE);
+		attrs[ATTR_TCP_STATE] = tb[CTA_PROTOINFO_TCP_STATE];
 	}
 	if (tb[CTA_PROTOINFO_TCP_WSCALE_ORIGINAL]) {
-		ctattrs->attrs[ATTR_TCP_WSCALE_ORIG]
+		attrs[ATTR_TCP_WSCALE_ORIG]
 			= tb[CTA_PROTOINFO_TCP_WSCALE_ORIGINAL];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TCP_WSCALE_ORIG);
 	}
 	if (tb[CTA_PROTOINFO_TCP_WSCALE_REPLY]) {
-		ctattrs->attrs[ATTR_TCP_WSCALE_REPL]
+		attrs[ATTR_TCP_WSCALE_REPL]
 			= tb[CTA_PROTOINFO_TCP_WSCALE_REPLY];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TCP_WSCALE_REPL);
 	}
 	if (tb[CTA_PROTOINFO_TCP_FLAGS_ORIGINAL]) {
-		ctattrs->attrs[ATTR_TCP_FLAGS_ORIG]
-			= ctattrs->attrs[ATTR_TCP_MASK_ORIG] /* XXX: ? */
+		attrs[ATTR_TCP_FLAGS_ORIG]
+			= attrs[ATTR_TCP_MASK_ORIG] /* XXX: ? */
 			= tb[CTA_PROTOINFO_TCP_FLAGS_ORIGINAL];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TCP_FLAGS_ORIG);
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TCP_MASK_ORIG);
 	}
 	if (tb[CTA_PROTOINFO_TCP_FLAGS_REPLY]) {
-		ctattrs->attrs[ATTR_TCP_FLAGS_REPL]
-			= ctattrs->attrs[ATTR_TCP_MASK_REPL] /* XXX: ? */
+		attrs[ATTR_TCP_FLAGS_REPL]
+			= attrs[ATTR_TCP_MASK_REPL] /* XXX: ? */
 			= tb[CTA_PROTOINFO_TCP_FLAGS_REPLY];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TCP_FLAGS_REPL);
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TCP_MASK_REPL);
 	}
 
 	return 0;
 }
 
 static int
-nfcta_parse_protoinfo_sctp(const struct nlattr *attr, struct nfct_attrs *ctattrs)
+nfcta_parse_protoinfo_sctp(const struct nlattr *attr, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_PROTOINFO_SCTP_MAX+1] = {};
 
@@ -1216,25 +1176,22 @@ nfcta_parse_protoinfo_sctp(const struct nlattr *attr, struct nfct_attrs *ctattrs
 		return -1;
 
 	if (tb[CTA_PROTOINFO_SCTP_STATE]) {
-		ctattrs->attrs[ATTR_SCTP_STATE] = tb[CTA_PROTOINFO_SCTP_STATE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_SCTP_STATE);
+		attrs[ATTR_SCTP_STATE] = tb[CTA_PROTOINFO_SCTP_STATE];
 	}
 	if (tb[CTA_PROTOINFO_SCTP_VTAG_ORIGINAL]) {
-		ctattrs->attrs[ATTR_SCTP_VTAG_ORIG]
+		attrs[ATTR_SCTP_VTAG_ORIG]
 			= tb[CTA_PROTOINFO_SCTP_VTAG_ORIGINAL];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_SCTP_VTAG_ORIG);
 	}
 	if (tb[CTA_PROTOINFO_SCTP_VTAG_REPLY]) {
-		ctattrs->attrs[ATTR_SCTP_VTAG_REPL]
+		attrs[ATTR_SCTP_VTAG_REPL]
 			= tb[CTA_PROTOINFO_SCTP_VTAG_REPLY];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_SCTP_VTAG_REPL);
 	}
 
 	return 0;
 }
 
 static int
-nfcta_parse_protoinfo_dccp(const struct nlattr *attr, struct nfct_attrs *ctattrs)
+nfcta_parse_protoinfo_dccp(const struct nlattr *attr, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_PROTOINFO_DCCP_MAX+1] = {};
 
@@ -1242,24 +1199,21 @@ nfcta_parse_protoinfo_dccp(const struct nlattr *attr, struct nfct_attrs *ctattrs
 		return -1;
 
 	if (tb[CTA_PROTOINFO_DCCP_STATE]) {
-		ctattrs->attrs[ATTR_DCCP_STATE] = tb[CTA_PROTOINFO_DCCP_STATE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_DCCP_STATE);
+		attrs[ATTR_DCCP_STATE] = tb[CTA_PROTOINFO_DCCP_STATE];
 	}
 	if (tb[CTA_PROTOINFO_DCCP_ROLE]) {
-		ctattrs->attrs[ATTR_DCCP_ROLE] = tb[CTA_PROTOINFO_DCCP_ROLE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_DCCP_ROLE);
+		attrs[ATTR_DCCP_ROLE] = tb[CTA_PROTOINFO_DCCP_ROLE];
 	}
 	if (tb[CTA_PROTOINFO_DCCP_HANDSHAKE_SEQ]) {
-		ctattrs->attrs[ATTR_DCCP_HANDSHAKE_SEQ]
+		attrs[ATTR_DCCP_HANDSHAKE_SEQ]
 			= tb[CTA_PROTOINFO_DCCP_HANDSHAKE_SEQ];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_DCCP_HANDSHAKE_SEQ);
 	}
 
 	return 0;
 }
 
 static int
-nfcta_parse_protoinfo(const struct nlattr *attr, struct nfct_attrs *ctattrs)
+nfcta_parse_protoinfo(const struct nlattr *attr, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_PROTOINFO_MAX+1] = {};
 
@@ -1267,19 +1221,19 @@ nfcta_parse_protoinfo(const struct nlattr *attr, struct nfct_attrs *ctattrs)
 		return -1;
 
 	if (tb[CTA_PROTOINFO_TCP])
-		nfcta_parse_protoinfo_tcp(tb[CTA_PROTOINFO_TCP], ctattrs);
+		nfcta_parse_protoinfo_tcp(tb[CTA_PROTOINFO_TCP], attrs);
 
 	if (tb[CTA_PROTOINFO_SCTP])
-		nfcta_parse_protoinfo_sctp(tb[CTA_PROTOINFO_SCTP], ctattrs);
+		nfcta_parse_protoinfo_sctp(tb[CTA_PROTOINFO_SCTP], attrs);
 
 	if (tb[CTA_PROTOINFO_DCCP])
-		nfcta_parse_protoinfo_dccp(tb[CTA_PROTOINFO_DCCP], ctattrs);
+		nfcta_parse_protoinfo_dccp(tb[CTA_PROTOINFO_DCCP], attrs);
 
 	return 0;
 }
 
 static int
-nfcta_parse_counters(const struct nlattr *attr, struct nfct_attrs *ctattrs, int dir)
+nfcta_parse_counters(const struct nlattr *attr, struct nlattr **attrs, int dir)
 {
 	struct nlattr *tb[CTA_COUNTERS_MAX+1] = {};
 
@@ -1290,25 +1244,23 @@ nfcta_parse_counters(const struct nlattr *attr, struct nfct_attrs *ctattrs, int 
 		switch(dir) {
 		case __DIR_ORIG:
 			if (tb[CTA_COUNTERS32_PACKETS]) {
-				ctattrs->attrs[ATTR_ORIG_COUNTER_PACKETS]
+				attrs[ATTR_ORIG_COUNTER_PACKETS]
 					= tb[CTA_COUNTERS32_PACKETS];
 			}
 			if (tb[CTA_COUNTERS_PACKETS]) {
-				ctattrs->attrs[ATTR_ORIG_COUNTER_PACKETS]
+				attrs[ATTR_ORIG_COUNTER_PACKETS]
 					= tb[CTA_COUNTERS_PACKETS];
 			}
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_COUNTER_PACKETS);
 			break;
 		case __DIR_REPL:
 			if (tb[CTA_COUNTERS32_PACKETS]) {
-				ctattrs->attrs[ATTR_REPL_COUNTER_PACKETS]
+				attrs[ATTR_REPL_COUNTER_PACKETS]
 					= tb[CTA_COUNTERS32_PACKETS];
 			}
 			if (tb[CTA_COUNTERS_PACKETS]) {
-				ctattrs->attrs[ATTR_REPL_COUNTER_PACKETS]
+				attrs[ATTR_REPL_COUNTER_PACKETS]
 					= tb[CTA_COUNTERS_PACKETS];
 			}
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_COUNTER_PACKETS);
 			break;
 		}
 	}
@@ -1316,25 +1268,23 @@ nfcta_parse_counters(const struct nlattr *attr, struct nfct_attrs *ctattrs, int 
 		switch(dir) {
 		case __DIR_ORIG:
 			if (tb[CTA_COUNTERS32_BYTES]) {
-				ctattrs->attrs[ATTR_ORIG_COUNTER_BYTES]
+				attrs[ATTR_ORIG_COUNTER_BYTES]
 					= tb[CTA_COUNTERS32_BYTES];
 			}
 			if (tb[CTA_COUNTERS_BYTES]) {
-				ctattrs->attrs[ATTR_ORIG_COUNTER_BYTES]
+				attrs[ATTR_ORIG_COUNTER_BYTES]
 					= tb[CTA_COUNTERS_BYTES];
 			}
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_COUNTER_BYTES);
 			break;
 		case __DIR_REPL:
 			if (tb[CTA_COUNTERS32_BYTES]) {
-				ctattrs->attrs[ATTR_REPL_COUNTER_BYTES]
+				attrs[ATTR_REPL_COUNTER_BYTES]
 					= tb[CTA_COUNTERS32_BYTES];
 			}
 			if (tb[CTA_COUNTERS_BYTES]) {
-				ctattrs->attrs[ATTR_REPL_COUNTER_BYTES]
+				attrs[ATTR_REPL_COUNTER_BYTES]
 					= tb[CTA_COUNTERS_BYTES];
 			}
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_COUNTER_BYTES);
 			break;
 		}
 	}
@@ -1343,7 +1293,7 @@ nfcta_parse_counters(const struct nlattr *attr, struct nfct_attrs *ctattrs, int 
 }
 
 static int
-nfcta_parse_nat_seq(const struct nlattr *attr, struct nfct_attrs *ctattrs,
+nfcta_parse_nat_seq(const struct nlattr *attr, struct nlattr **attrs,
 		    int dir)
 {
 	struct nlattr *tb[CTA_NAT_SEQ_MAX+1] = {};
@@ -1354,14 +1304,12 @@ nfcta_parse_nat_seq(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_NAT_SEQ_CORRECTION_POS]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_NAT_SEQ_CORRECTION_POS]
+			attrs[ATTR_ORIG_NAT_SEQ_CORRECTION_POS]
 				= tb[CTA_NAT_SEQ_CORRECTION_POS];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_NAT_SEQ_CORRECTION_POS);
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_NAT_SEQ_CORRECTION_POS]
+			attrs[ATTR_REPL_NAT_SEQ_CORRECTION_POS]
 				= tb[CTA_NAT_SEQ_CORRECTION_POS];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_NAT_SEQ_CORRECTION_POS);
 			break;
 		}
 	}
@@ -1369,14 +1317,12 @@ nfcta_parse_nat_seq(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_NAT_SEQ_OFFSET_BEFORE]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_NAT_SEQ_OFFSET_BEFORE]
+			attrs[ATTR_ORIG_NAT_SEQ_OFFSET_BEFORE]
 				= tb[CTA_NAT_SEQ_OFFSET_BEFORE];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_NAT_SEQ_OFFSET_BEFORE);
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_NAT_SEQ_OFFSET_BEFORE]
+			attrs[ATTR_REPL_NAT_SEQ_OFFSET_BEFORE]
 				= tb[CTA_NAT_SEQ_OFFSET_BEFORE];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_NAT_SEQ_OFFSET_BEFORE);
 			break;
 		}
 	}
@@ -1384,14 +1330,12 @@ nfcta_parse_nat_seq(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 	if (tb[CTA_NAT_SEQ_OFFSET_AFTER]) {
 		switch(dir) {
 		case __DIR_ORIG:
-			ctattrs->attrs[ATTR_ORIG_NAT_SEQ_OFFSET_AFTER]
+			attrs[ATTR_ORIG_NAT_SEQ_OFFSET_AFTER]
 				= tb[CTA_NAT_SEQ_OFFSET_AFTER];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_NAT_SEQ_OFFSET_AFTER);
 			break;
 		case __DIR_REPL:
-			ctattrs->attrs[ATTR_REPL_NAT_SEQ_OFFSET_AFTER]
+			attrs[ATTR_REPL_NAT_SEQ_OFFSET_AFTER]
 				= tb[CTA_NAT_SEQ_OFFSET_AFTER];
-			nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_NAT_SEQ_OFFSET_AFTER);
 			break;
 		}
 	}
@@ -1400,7 +1344,7 @@ nfcta_parse_nat_seq(const struct nlattr *attr, struct nfct_attrs *ctattrs,
 }
 
 static int
-nfcta_parse_helper(const struct nlattr *attr, struct nfct_attrs *ctattrs)
+nfcta_parse_helper(const struct nlattr *attr, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_HELP_MAX+1] = {};
 
@@ -1410,20 +1354,18 @@ nfcta_parse_helper(const struct nlattr *attr, struct nfct_attrs *ctattrs)
 	if (!tb[CTA_HELP_NAME])
 		return 0;
 
-	ctattrs->attrs[ATTR_HELPER_NAME] = tb[CTA_HELP_NAME];
-	nfct_bitmask_set_bit(ctattrs->set, ATTR_HELPER_NAME);
+	attrs[ATTR_HELPER_NAME] = tb[CTA_HELP_NAME];
 
 	if (!tb[CTA_HELP_INFO])
 		return 0;
 
-	ctattrs->attrs[ATTR_HELPER_INFO] = tb[CTA_HELP_INFO];
-	nfct_bitmask_set_bit(ctattrs->set, ATTR_HELPER_INFO);
+	attrs[ATTR_HELPER_INFO] = tb[CTA_HELP_INFO];
 
 	return 0;
 }
 
 static int
-nfcta_parse_secctx(const struct nlattr *attr, struct nfct_attrs *ctattrs)
+nfcta_parse_secctx(const struct nlattr *attr, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_SECCTX_MAX+1] = {};
 
@@ -1433,14 +1375,13 @@ nfcta_parse_secctx(const struct nlattr *attr, struct nfct_attrs *ctattrs)
 	if (!tb[CTA_SECCTX_NAME])
 		return 0;
 
-	ctattrs->attrs[ATTR_SECCTX] = tb[CTA_SECCTX_NAME];
-	nfct_bitmask_set_bit(ctattrs->set, ATTR_SECCTX);
+	attrs[ATTR_SECCTX] = tb[CTA_SECCTX_NAME];
 
 	return 0;
 }
 
 static int
-nfcta_parse_timestamp(const struct nlattr *attr, struct nfct_attrs *ctattrs)
+nfcta_parse_timestamp(const struct nlattr *attr, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_TIMESTAMP_MAX+1] = {};
 
@@ -1448,28 +1389,25 @@ nfcta_parse_timestamp(const struct nlattr *attr, struct nfct_attrs *ctattrs)
 		return -1;
 
 	if (tb[CTA_TIMESTAMP_START]) {
-		ctattrs->attrs[ATTR_TIMESTAMP_START] = tb[CTA_TIMESTAMP_START];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TIMESTAMP_START);
+		attrs[ATTR_TIMESTAMP_START] = tb[CTA_TIMESTAMP_START];
 	}
 	if (tb[CTA_TIMESTAMP_STOP]) {
-		ctattrs->attrs[ATTR_TIMESTAMP_STOP] = tb[CTA_TIMESTAMP_STOP];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TIMESTAMP_STOP);
+		attrs[ATTR_TIMESTAMP_STOP] = tb[CTA_TIMESTAMP_STOP];
 	}
 
 	return 0;
 }
 
 static int nfcta_parse_labels(struct nlattr *attr,
-			      struct nfct_attrs *ctattrs)
+			      struct nlattr **attrs)
 {
-	ctattrs->attrs[ATTR_CONNLABELS] = attr;
-	nfct_bitmask_set_bit(ctattrs->set, ATTR_CONNLABELS);
+	attrs[ATTR_CONNLABELS] = attr;
 	return 0;
 }
 
 int
 nfcta_payload_parse(const void *payload, size_t payload_len,
-		    uint16_t l3num, struct nfct_attrs *ctattrs)
+		    uint16_t l3num, struct nlattr **attrs)
 {
 	struct nlattr *tb[CTA_MAX+1] = {};
 
@@ -1477,97 +1415,83 @@ nfcta_payload_parse(const void *payload, size_t payload_len,
 				   nfct_parse_conntrack_attr_cb, tb) < 0)
 		return -1;
 
-	ctattrs->l3proto = l3num;
 	if (tb[CTA_TUPLE_ORIG]) {
-		/* ctattrs->attrs[ATTR_ORIG_L3PROTO] = l3num; */
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ORIG_L3PROTO);
-
+		/* attrs[ATTR_ORIG_L3PROTO] = l3num; */
 		if (nfcta_parse_tuple(tb[CTA_TUPLE_ORIG],
-				      ctattrs, __DIR_ORIG) < 0)
+				      attrs, __DIR_ORIG) < 0)
 			return -1;
 	}
 	if (tb[CTA_TUPLE_REPLY]) {
-		/* ctattrs->attrs[ATTR_REPL_L3PROTO] = l3num; */
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_REPL_L3PROTO);
-
+		/* attrs[ATTR_REPL_L3PROTO] = l3num; */
 		if (nfcta_parse_tuple(tb[CTA_TUPLE_REPLY],
-				      ctattrs, __DIR_REPL) < 0)
+				      attrs, __DIR_REPL) < 0)
 			return -1;
 	}
 	if (tb[CTA_TUPLE_MASTER]) {
-		/* ctattrs->attrs[ATTR_MASTER_L3PROTO] = l3num; */
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_MASTER_L3PROTO);
-
+		/* attrs[ATTR_MASTER_L3PROTO] = l3num; */
 		if (nfcta_parse_tuple(tb[CTA_TUPLE_MASTER],
-				      ctattrs, __DIR_MASTER) < 0)
+				      attrs, __DIR_MASTER) < 0)
 			return -1;
 	}
 	if (tb[CTA_NAT_SEQ_ADJ_ORIG]) {
 		if (nfcta_parse_nat_seq(tb[CTA_NAT_SEQ_ADJ_ORIG],
-					ctattrs, __DIR_ORIG) < 0)
+					attrs, __DIR_ORIG) < 0)
 			return -1;
 	}
 	if (tb[CTA_NAT_SEQ_ADJ_REPLY]) {
 		if (nfcta_parse_nat_seq(tb[CTA_NAT_SEQ_ADJ_REPLY],
-					ctattrs, __DIR_REPL) < 0)
+					attrs, __DIR_REPL) < 0)
 			return -1;
 	}
 	if (tb[CTA_STATUS]) {
-		ctattrs->attrs[ATTR_STATUS] = tb[CTA_STATUS];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_STATUS);
+		attrs[ATTR_STATUS] = tb[CTA_STATUS];
 	}
 	if (tb[CTA_PROTOINFO]) {
-		if (nfcta_parse_protoinfo(tb[CTA_PROTOINFO], ctattrs) < 0)
+		if (nfcta_parse_protoinfo(tb[CTA_PROTOINFO], attrs) < 0)
 			return -1;
 	}
 	if (tb[CTA_TIMEOUT]) {
-		ctattrs->attrs[ATTR_TIMEOUT] = tb[CTA_TIMEOUT];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_TIMEOUT);
+		attrs[ATTR_TIMEOUT] = tb[CTA_TIMEOUT];
 	}
 	if (tb[CTA_MARK]) {
-		ctattrs->attrs[ATTR_MARK] = tb[CTA_MARK];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_MARK);
+		attrs[ATTR_MARK] = tb[CTA_MARK];
 	}
 	if (tb[CTA_SECMARK]) {
-		ctattrs->attrs[ATTR_SECMARK] = tb[CTA_SECMARK];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_SECMARK);
+		attrs[ATTR_SECMARK] = tb[CTA_SECMARK];
 	}
 	if (tb[CTA_COUNTERS_ORIG]) {
 		if (nfcta_parse_counters(tb[CTA_COUNTERS_ORIG],
-					 ctattrs, __DIR_ORIG) < 0)
+					 attrs, __DIR_ORIG) < 0)
 			return -1;
 	}
 	if (tb[CTA_COUNTERS_REPLY]) {
 		if (nfcta_parse_counters(tb[CTA_COUNTERS_REPLY],
-					 ctattrs, __DIR_REPL) < 0)
+					 attrs, __DIR_REPL) < 0)
 			return -1;
 	}
 	if (tb[CTA_USE]) {
-		ctattrs->attrs[ATTR_USE] = tb[CTA_USE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_USE);
+		attrs[ATTR_USE] = tb[CTA_USE];
 	}
 	if (tb[CTA_ID]) {
-		ctattrs->attrs[ATTR_ID] = tb[CTA_ID];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ID);
+		attrs[ATTR_ID] = tb[CTA_ID];
 	}
 	if (tb[CTA_HELP]) {
-		if (nfcta_parse_helper(tb[CTA_HELP], ctattrs) < 0)
+		if (nfcta_parse_helper(tb[CTA_HELP], attrs) < 0)
 			return -1;
 	}
 	if (tb[CTA_ZONE]) {
-		ctattrs->attrs[ATTR_ZONE] = tb[CTA_ZONE];
-		nfct_bitmask_set_bit(ctattrs->set, ATTR_ZONE);
+		attrs[ATTR_ZONE] = tb[CTA_ZONE];
 	}
 	if (tb[CTA_SECCTX]) {
-		if (nfcta_parse_secctx(tb[CTA_SECCTX], ctattrs) < 0)
+		if (nfcta_parse_secctx(tb[CTA_SECCTX], attrs) < 0)
 			return -1;
 	}
 	if (tb[CTA_TIMESTAMP]) {
-		if (nfcta_parse_timestamp(tb[CTA_TIMESTAMP], ctattrs) < 0)
+		if (nfcta_parse_timestamp(tb[CTA_TIMESTAMP], attrs) < 0)
 			return -1;
 	}
 	if (tb[CTA_LABELS]) {
-		if (nfcta_parse_labels(tb[CTA_LABELS], ctattrs) < 0)
+		if (nfcta_parse_labels(tb[CTA_LABELS], attrs) < 0)
 			return -1;
 	}
 	/* CTA_LABELS_MASK: never sent by kernel */
@@ -1575,18 +1499,12 @@ nfcta_payload_parse(const void *payload, size_t payload_len,
 	return 0;
 }
 
-int nfcta_nlmsg_parse(const struct nlmsghdr *nlh, struct nfct_attrs *ctattrs)
+int nfcta_nlmsg_parse(const struct nlmsghdr *nlh, struct nlattr **attrs)
 {
 	struct nfgenmsg *nfhdr = mnl_nlmsg_get_payload(nlh);
 
 	return nfcta_payload_parse((uint8_t *)nfhdr + sizeof(struct nfgenmsg),
 				   mnl_nlmsg_get_payload_len(nlh)
 				   - sizeof(struct nfgenmsg),
-				   nfhdr->nfgen_family, ctattrs);
-}
-
-void init_nfct_attrs(struct nfct_attrs *ctattrs)
-{
-	memset(ctattrs, 0, NFCT_ATTRS_SIZE);
-	ctattrs->set = (void *)ctattrs + sizeof(struct nfct_attrs);
+				   nfhdr->nfgen_family, attrs);
 }
